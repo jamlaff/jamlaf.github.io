@@ -19,7 +19,7 @@ Command Injection 이란?
 
 2023년 OWASP(Open Web Application Security Project) 상위 10개 취약점에서는 Injection 공격이 3위를 이루고 있는 것을 확인할 수 있습니다. 취약점에 노출되어 주입 공격에 성공할 경우 악의적인 시스템 명령어를 통해 데이터 손실, 도난, 노출 등을 유발하며 최악의 경우 전체 시스템을 장악하고 손상시킬 수 있는 공격으로 심각한 피해를 입을 수 있습니다.
 
-- Command Injection에 취약한 함수
+##### Command Injection에 취약한 함수
 OS에서 시스템 명령을 실행하여 데이터를 노출, 손실 및 도난이 가능하다 하였는데 해당 시스템 명령을 통해  Command Injection 공격에 취약한 함수와 메타문자 등이 존재합니다.
 
 언어
@@ -29,7 +29,7 @@ python - exec(), eval(), os.system(), os.popen(), subprocess.popen(), subprocess
 Perl - open(). sysopen(), system(), glob()
 php - exec(), system(), passthru(), popen(), rquire(), include(), eval(), preg_replace(), shell_exec(), proc_open(), eval()
 
-- 메타문자
+#### 메타문자
 쉘에는 한 줄에 여러 명령어를 실행하는 등의 쉘 사용자 편의성을 위해 제공하는 특수 문자들이 존재합니다. 시스템 명령이 수행된다면 특수문자를 활용해 Command Injection 공격이 가능합니다.
 
 메타문자 - 뜻
