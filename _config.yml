@@ -105,8 +105,8 @@ analytics:
 # Site Author
 author:
   name             : "jamlaf"
-  avatar           : # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
-  bio              : "I am an **amazing** person."
+  avatar           : /assets/guiri.png # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
+  bio              : "Hacking Study Blog"
   location         : "jamlaf."
   email            :
   links:
