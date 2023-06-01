@@ -17,10 +17,29 @@ Command Injection 이란?
 
 ![이미지](/assets/OWASP_injection.png)
 
-2023년 OWASP(Open Web Application Security Project) 상위 10개 취약점에서는 Injection 공격이 3위를 이루고 있는 것을 확인할 수 있습니다. Command Injection 취약점에 노출되어 주입 공격에 성공할 경우 악의적인 시스템 명령어를 통해 데이터 손실, 도난, 노출 등을 유발하며 최악의 경우 전체 시스템을 손상시킬 수 있는 공격으로 심각한 피해를 입을 수 있습니다.
+2023년 OWASP(Open Web Application Security Project) 상위 10개 취약점에서는 Injection 공격이 3위를 이루고 있는 것을 확인할 수 있습니다. 취약점에 노출되어 주입 공격에 성공할 경우 악의적인 시스템 명령어를 통해 데이터 손실, 도난, 노출 등을 유발하며 최악의 경우 전체 시스템을 장악하고 손상시킬 수 있는 공격으로 심각한 피해를 입을 수 있습니다.
 
-# 리눅스 시스템 명령어 간단 설명
-OS에서 시스템 명령을 실행하여 데이터를 노출, 손실 및 도난이 가능하다 하였는데 Command Injection 공격에서 사용할 수 있는 리눅스 시스템 명령어를 간단히 살펴보겠습니다.
+- Command Injection에 취약한 함수
+OS에서 시스템 명령을 실행하여 데이터를 노출, 손실 및 도난이 가능하다 하였는데 해당 시스템 명령을 통해  Command Injection 공격에 취약한 함수와 메타문자 등이 존재합니다.
+
+언어
+Java - Ststen.*, System.runtime, Runtime.exec()
+C/C++ - system(). exec(), ShellExecute()
+python - exec(), eval(), os.system(), os.popen(), subprocess.popen(), subprocess.call()
+Perl - open(). sysopen(), system(), glob()
+php - exec(), system(), passthru(), popen(), rquire(), include(), eval(), preg_replace(), shell_exec(), proc_open(), eval()
+
+- 메타문자
+쉘에는 한 줄에 여러 명령어를 실행하는 등의 쉘 사용자 편의성을 위해 제공하는 특수 문자들이 존재합니다. 시스템 명령이 수행된다면 특수문자를 활용해 Command Injection 공격이 가능합니다.
+
+메타문자 - 뜻
+'' - 명령어 치환 : ''안에 들어있는 멸영어를 실행한 결과로 치환
+$() - 명령어 치환 : $() 안에 들어있는 명령어를 실행한 결과로 치환, 중복 사용 가능
+&& - 명령어 연속실행 : 한 줄에 여러 명령어를 사용하고 싶을 때 사용. 앞 명령어에서 에러가 발생하지 않아야 뒷 명령어 실행
+|| - 명령어 연속 실행 : 한 줄에 여러 명령어를 사용하고 싶을 때 사용. 앞 명령어에서 에러가 발생해야 뒷 명령어 실행
+; - 명령어 구분자 한 줄에 여러 명령어를 사용하고 싶을 때 사용. ; 은 단순히 명령어 구분을 위해 사용하며, 앞 명령어의 에러 유무와 관계 없이 뒷 명령어 실행
+| - 파이프 앞 명령어 결과가 뒷 명령어 입력으로 들어간다.
+그 외 - ., >, >>, &>, >&, <, {}, ?, *, ~
 
 
 # 개념 증명
