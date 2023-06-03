@@ -176,7 +176,7 @@ if( isset( $_GET[ 'Login' ] ) ) {
     }
     else {
         // Login failed
-        <span style='background-color: #ffdce0'>sleep( rand( 0, 3 ) );</span>
+       sleep( rand( 0, 3 ) );
         echo "<pre><br />Username and/or password incorrect.</pre>";
     }
 
