@@ -4,6 +4,7 @@
 - 이번 2주차 Writeup 에서는 Command Injection 공격(명령어 주입 공격)에 대한 공부 및 실습을 진행해보았다.
 - 아래 설명하는 모든 공부 및 실습은 VirtualBox - Kali Linux 가상머신에서 DVWA 취약한 웹 환경을 구성하여 이루어졌다.
 
+
 ### 목차
 이번 Writeup 에서 진행하는 Command Injection과 관련된 공부는 다음과 같다.
 1. 취약점 정보/설명 - Command Inejction 공격에 대한 연구
@@ -11,28 +12,20 @@
 3. 대응방안 공부 - Command Injection 공격에 대한 대응 방안
 4. 레퍼런스
 
+
 ### 취약점 정보
-- Command Injection 취약점은 
 
 ![이미지](/assets/OWASP_injection.png)
 
 2022년 부터 2023년 현재까지 OWASP(Open Web Application Security Project) 상위 10개 취약점에서는 Injection 공격이 3위를 이루고 있는 것을 확인할 수 있다. 취약점에 노출되어 주입 공격에 성공할 경우 악의적인 시스템 명령어를 통해 데이터 손실, 도난, 노출 등을 유발하며 최악의 경우 전체 시스템을 장악하고 손상시킬 수 있는 공격으로 심각한 피해를 입을 수 있는 공격이니 Injection에 대한 철저한 보안 설정 및 시큐어 코딩이 필요하다.
 
+
 ### 취약점 설명
-Command Injection 이란?
+- Command Injection 이란?
 명령어를 주입한다 라는 뜻으로, 취약한 애플리케이션을 통해 호스트 OS에서 시스템 명령을 실행하는 것을 목표로 하며 웹 요청 메시지에 임의의 시스템 명령어를 삽입하고 전송하면 웹 서버에서 해당 명령어를 살행하도록 하는 공격을 의미한다. 공격자가 사용하는 운영체제 명령은 일반적으로 취약한 응용 프로그램의 권한으로 실행된다.
 
-##### Command Injection에 취약한 함수
-OS에서 시스템 명령을 실행하여 데이터를 노출, 손실 및 도난이 가능하다 하였는데 해당 시스템 명령을 통해  Command Injection 공격에 취약한 함수와 메타문자 등이 존재한다.
 
-언어
-Java - Ststen.*, System.runtime, Runtime.exec()
-C/C++ - system(). exec(), ShellExecute()
-python - exec(), eval(), os.system(), os.popen(), subprocess.popen(), subprocess.call()
-Perl - open(). sysopen(), system(), glob()
-php - exec(), system(), passthru(), popen(), rquire(), include(), eval(), preg_replace(), shell_exec(), proc_open(), eval()
-
-#### 메타문자
+- 메타문자
 쉘에는 한 줄에 여러 명령어를 실행하는 등의 쉘 사용자 편의성을 위해 제공하는 특수 문자들이 존재한다. 시스템 명령이 수행된다면 특수문자를 활용해 Command Injection 공격이 가능하다.
 
 메타문자 - 뜻
@@ -48,7 +41,8 @@ $() - 명령어 치환 : $() 안에 들어있는 명령어를 실행한 결과�
 ### 개념 증명
 DVWA 취약 환경에서 Command Injection 공격을 실습해보았습니다. 다음과 같은 페이지에서 입력창에 IP를 넣으면 해당 IP주소로 ping 명령어를 실행한 후 그 결과를 출력해 주는 페이지이다.
 
-* Low Level
+#### * Low Level
+
 ![이미지](/assets/7_ping.png)
 
 IP(127.0.0.1) 입력해 보았을 때 ping 127.0.0.1 결과를 출력해주는 것을 볼 수 있었다.
@@ -75,20 +69,74 @@ IP를 생략하고 ';' 뒤에 'cat /etc/passwd' 명령을 통해 원격 호스�
 
 뒤에 '$target'은 웹의 요청 메시지로 부터 전달된 파라미터 값으로 '$target' 부분에 IP를 전달받아 ping 명령이 실행되게 된다.
 
-따라서 IP값을 전달하여 ping 명령을 실행할 때 뒤에 메타문자(;,&&,| 등)을 사용하여 다른 명령어가 실행되도록 전달인자 값을 보내어 시스템의 정보 노출 및 권한 획득 공격까지 수행할 수 있다.
+따라서 IP값을 전달하여 ping 명령을 실행할 때 뒤에 메타문자(;,&&,| 등)을 사용하여 다른 명령어가 실행되도록 전달인자 값을 보내어 시스템의 정보 노출 및 root 권한 획득 공격까지 수행할 수 있다.
 
-* Midium Level
+#### * Midium Level
 
-* High Level
+Midium Level에서는 동일하게 ';cat /etc/passwd' 명령을 실행해보았을 때 이전과 같이 사용자 정보 획득 공격에 성공할 수 없었다. 소스코드를 확인하여 우회할 수 있는 방안을 확인해보았다.
+
+* 소스코드 확인(Midium)
+
+![이미지](/assets/midium_source.png)
+
+소스코드를 보니 ';', '&&' 메타문자를 사용할 경우 Command Injection이 실행되지 않도록 해당 문자가 지워지도록 시큐어 코딩이 되어있었다. 
+
+하지만 위 설명과 같이 ';', '&&' 문자 이외에도 우회할 수 있는 다른 메타문자가 존재한다. 
+
+![이미지](/assets/midium_3.png)
+
+위와 같이 '&' 사용하여 앞에 ping 명령을 백그라운드에서 사용되게 만들고 뒤에 id 명령을 통해 사용자의 권한을 획득하였다.
+
+![이미지](/assets/midium_4.png)
+
+이번에는 '|' 파이프 문자를 통해 사용자 정보 획득까지 시큐어 코딩을 우회하여 공격에 성공한 것을 확인할 수 있었다. 
+
+#### * High Level
+
+이 전에 사용하였던 문자들을 모두 실행해보았을 때 Command Injection 공격이 정상적으로 수행되지 않았다.
+
+* 소스코드 확인(High)
+
+![이미지](/assets/high_1.png)
+
+이 전과 비교하여 많은 문자를 제한하는 시큐어 코딩으로 '&', ';', '|', '-' 등 9개의 문자를 사용하는 경우 해당 문자를 공백으로 치환하여 대응을 하고있는 것을 볼 수 있다.
+
+하지만 코드를 보면 개발자의 실수로 '| ' 이 처럼 문자 뒤에 공백이 추가되어 있는 것을 확인할 수 있었다. 따라서 해당 문자 뒤에 '|'를 하나 더 붙이게 되면 공백으로 치환되면서 뒤에 썼었던 '| cat /etc/passwd' 명령어가 실행되었다.
+
+'||' 문자도 공백으로 치환하도록 되어 있는데 공격에 성공했던 이유는 '||'을 실행하기 이전에 '| ' 명령어 치환이 이미 수행되었기 때문에 대응을 마치고 다음 조건문으로 넘어갔기 때문이다.
+
+이 처럼 잘 대응을 했지만, 하나의 실수로 공격자에게 정보가 노출 되는 것을 확인할 수 있었다.
 
 
 ### 취약점 원인
 
-ping 명령은 shell을 통해 실행이 되는데 웹에서 시스템 명령이 실행되는 것은 운영체제에게 시스템 명령을 호출하는 것으로, Command Injection에 취약점이 있는 웹 환경을 확인하였다. 어째서 이게 가능한 것일까?
+위와 같이 Command Injection에 취약점이 있는 웹 환경을 확인하였다. 어떻게 시스템 명령어를 호출하는 어플리케이션의 인자 값을 조작하고 Shell 권한을 흭득하여 의도하지 않은 시스템 명령어를 실행시키는 공격이 가능한걸까?
+
+웹 어플리케이션 시스템에 system(), exec() 등과 같이 시스템 명령어를 실행시킬 수 있는 함수를 제공하게되면 공격자가 인자값을 조작하여 검증 절차 없이 운영체제 시스템 명령어를 호출하고 사용자 계정 정보 및 시스템의 관리자 권한 탈취하여 보안에 심각한 영향을 미치는 것이다.
+
+###### Command Injection에 취약한 함수
+
+어플리케이션 별로 Command Injection 공격에 취약한 함수는 아래와 같다.
+
+언어
+Java - Ststen.*, System.runtime, Runtime.exec()
+C/C++ - system(). exec(), ShellExecute()
+python - exec(), eval(), os.system(), os.popen(), subprocess.popen(), subprocess.call()
+Perl - open(). sysopen(), system(), glob()
+php - exec(), system(), passthru(), popen(), rquire(), include(), eval(), preg_replace(), shell_exec(), proc_open(), eval()
 
 
 ### 대응 방안
 
-# 툴 제작 ?
+1. 웹 어플리케이션의 취약한 함수 사용을 최대한 피해야 한다.
 
-# 레퍼런스
+2. 전달 인자값에 대한 형식 및 데이터의 길이 지정
+- IP의 정해진 제한 범위인 0.0.0.0 ~ 255.255.255.255 처럼 미리 정의된 IP 형식과 데이터의 길이를 제한하여 인자값의 배열을 지정해 부적절한 외부 입력 값이 전달되지 못하도록 한다.
+
+3. 최소 권한의 원칙을 사용하며 각 시스템 계정마다 적절한 권한을 부여하고, 사용자 정보가 노출될 수 있는 파일은 암호화 한다.
+- 공격이 수행되더라도 시스템에 피해를 최소화 하여야 한다.
+
+
+### 레퍼런스
+- https://vmilsh.tistory.com/287
+- 
