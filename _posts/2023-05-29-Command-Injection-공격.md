@@ -9,7 +9,7 @@
 이번 Writeup 에서 진행하는 Command Injection과 관련된 공부는 다음과 같다.
 1. 취약점 정보/설명 - Command Inejction 공격에 대한 연구
 2. 개념 증명 실습 - DVWA Security Level(Low, Midium, High)로 구성된 실습 진행
-3. 대응방안 공부 - Command Injection 공격에 대한 대응 방안
+3. 대응방안 - Command Injection 공격에 대한 대응 방안
 4. 레퍼런스
 
 
