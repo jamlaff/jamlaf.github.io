@@ -64,6 +64,31 @@ IP를 생략하고 ';' 뒤에 'cat /etc/passwd' 명령을 통해 원격 호스�
 
 ![이미지](/assets/low_sourcecode.png)
 
+\\\ts
+<?php
+
+if( isset( $_POST[ 'Submit' ]  ) ) {
+    // Get input
+    $target = $_REQUEST[ 'ip' ];
+
+    // Determine OS and execute the ping command.
+    if( stristr( php_uname( 's' ), 'Windows NT' ) ) {
+        // Windows
+        $cmd = shell_exec( 'ping  ' . $target );
+    }
+    else {
+        // *nix
+        $cmd = shell_exec( 'ping  -c 4 ' . $target );
+    }
+
+    // Feedback for the end user
+    echo "<pre>{$cmd}</pre>";
+}
+
+?> 
+\\\
+
+
 소스 코드를 확인 해보니 ping 명령을 전달할 때 'ping -c 4'를 통해 ping을 보내게 된다. -c 옵션은 4번의 ICMP request와 reponse로 ping 명령을 종료하겠다 라는 의미이다. 
 
 뒤에 '$target'은 웹의 요청 메시지로 부터 전달된 파라미터 값으로 '$target' 부분에 IP를 전달받아 ping 명령이 실행되게 된다.
