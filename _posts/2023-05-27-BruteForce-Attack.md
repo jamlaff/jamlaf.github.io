@@ -93,9 +93,11 @@ if( isset( $_GET[ 'Login' ] ) ) {
 
 ![이미지](/assets/2second.png)
 
-위와 같이 취약한 웹 환경에서 Bruteforce 공격에 시도했을 때, password가 틀린 경우에는 `'Username and/or password incorrect.'` 문구를 확인할 수 있었다.
+위와 같이 취약한 웹 환경에서 Bruteforce 공격에 시도했을 때, password가 틀린 경우에는 `'Username and/or password incorrect.'` 문구를 확인할 수 있다.
 
-Midium Level 에서는 로그인 시도 시 응답이 조금 느리게 나오는 것을 파악할 수 있었다.
+![이미지](/assets/delay.png)
+
+Midium Level 에서는 Bruteforce 공격 응답이 느리게 나오는 것을 파악할 수 있다.
 
 ```c
 <?php
@@ -134,8 +136,6 @@ if( isset( $_GET[ 'Login' ] ) ) {
 
 ?> 
 ```
-
-![이미지](/assets/delay.png)
 
 위 소스 코드를 분석한 결과 로그인에 실패했을 경우에는 `sleep(2);` 함수를 통해 2초간 재로그인을 지연시키고 있다. 이 같은 방법으로 bruteforce 공격 진행을 지연시킬 수 있는 시큐어코딩이 되어 있지만, 해당하는 패스워드가 리스트에 상위에 있을 경우에는 여전히 사용자 권한을 빠르게 탈취할 수 있어 안심할 수 없다.
 
