@@ -7,14 +7,10 @@
 ### 목차
 
 이번 Writeup 에서 진행하는Bruteforce 공격과 관련된 공부는 다음과 같다.
-1. 취약점 정보/설명 - Bruteforce 공격에 대한 연구
+1. 취약점 설명 - Bruteforce 공격에 대한 연구
 2. 개념 증명 실습 - Burpsuite Intruder 툴을 활용하여 DVWA Security Level(Low, Midium, High)로 구성된 실습 진행
 3. 대응방안 공부 - Bruteforce 공격에 대한 대응 방안
 4. 레퍼런스
-
-### 취약점 정보
-
-
 
 ### 취약점 설명
 
@@ -28,7 +24,7 @@ Bruteforce 공격은 무차별 대입 공격이라고도 하며, 사용자의 �
 
 #### * Low Level
 
-##### Burpsuite Intruder
+##### Burpsuite Intruder 툴
 
 먼저 공격자는 admin 계정을 알고 있다고 가정한 뒤, 비밀번호에 대한 사전 대입 공격을 진행한다. Burpsuite을 통해 Proxy 탭에서 사용자가 인증 할 때 HTTP 요청을 가로챈 뒤, 이를 Intruder 탭으로 넘겨보았다. 이를 위해 password= 파라미터에 $ 기호를 넣어 해당 파라미터만 사전 대입 공격을 할 수 있도록 하였다.
 
@@ -42,7 +38,7 @@ password.lst 파일 안에는 1996년 부터 2011년 까지 사용자들이 자�
 
 ![이미지](/assets/6.john파일.png)
 
-admin 계정에 유효한 패스워를 통해 로그인에 성공할 경우 HTTP 응답의 크기가 4704가 되는 것을 확인할 수 있었다. Payloads를 보니 응답값으로 'Welcome to the password protected area admin' 이라는 문구를 출력하는 것을 볼 수 있었다.
+admin 계정에 유효한 패스워를 통해 로그인에 성공할 경우 HTTP 응답의 크기가 4704가 되는 것을 확인할 수 있었다. Payloads를 보니 응답값으로 `'Welcome to the password protected area admin'` 이라는 문구를 출력하는 것을 볼 수 있었다.
 
 * bruteforce 공격에 실패하였을 경우
 ![이미지](/assets/wrong_pass.png)
@@ -91,13 +87,13 @@ if( isset( $_GET[ 'Login' ] ) ) {
 ?> 
 ```
 
-위 소스코드에서 bruteforce 공격을 감지하거나 대응할 수 있는 코드가 확인 되지 않았다. bruteforce 공격에 대응할 시큐어코딩이 필요해 보인다. 
+위 소스코드에서 Bruteforce 공격을 감지하거나 대응할 수 있는 코드가 확인 되지 않았다. Bruteforce 공격에 대응할 시큐어코딩이 필요해 보인다. 
 
 #### * Midium Level
 
 ![이미지](/assets/2second.png)
 
-위와 같이 취약한 웹 환경에서 bruteforce 공격에 시도했을 때, password가 틀린 경우에는 'Username and/or password incorrect.' 문구를 확인할 수 있었다.
+위와 같이 취약한 웹 환경에서 Bruteforce 공격에 시도했을 때, password가 틀린 경우에는 `'Username and/or password incorrect.'` 문구를 확인할 수 있었다.
 
 Midium Level 에서는 로그인 시도 시 응답이 조금 느리게 나오는 것을 파악할 수 있었다.
 
