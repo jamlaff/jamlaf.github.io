@@ -227,6 +227,12 @@ if( isset( $_POST[ 'Submit' ]  ) ) {
 2. 전달 인자값에 대한 형식 및 데이터의 길이 지정
 - IP의 정해진 제한 범위인 0.0.0.0 ~ 255.255.255.255 처럼 미리 정의된 IP 형식과 데이터의 길이를 제한하여 인자값의 배열을 지정해 부적절한 외부 입력 값이 전달되지 못하도록 한다.
 
+```c
+    if( ( is_numeric( $octet[0] ) ) && ( is_numeric( $octet[1] ) ) && ( is_numeric( $octet[2] ) ) && ( is_numeric( $octet[3] ) ) && ( sizeof( $octet ) == 4 ) ) {
+        // If all 4 octets are int's put the IP back together.
+        $target = $octet[0] . '.' . $octet[1] . '.' . $octet[2] . '.' . $octet[3]; 
+```
+
 3. 최소 권한의 원칙을 사용하며 각 시스템 계정마다 적절한 권한을 부여하고, 사용자 정보가 노출될 수 있는 파일은 암호화 하여 공격이 수행되더라도 시스템에 피해를 최소화한다.
 
 
