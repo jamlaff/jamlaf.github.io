@@ -202,7 +202,7 @@ Midium에서 본 것과 같이 지연시간이 2초로 지정되어 있다면 �
 
 1. 패스워드 복잡성과 여러 계정에서의 비밀번호 재사용에 관한 정책을 설정한다.
 - 패스워드를 길고 복잡하게 만들도록 규칙을 강제하여 공격자가 패스워드를 알아낼 수 없도록 해야한다.
-* 패스워드 복잡성: 사용자 패스워드 설정 시 영문(대문자, 소문자) 숫자, 특수문자가 혼합된 패스워드로 설정하는 방법
+  (사용자 패스워드 설정 시 영문(대문자, 소문자) 숫자, 특수문자가 혼합된 패스워드로 설정하는 방법을 사용한다)
 
 4. 자동화방지(re-Captcha)를 활성화한다.
 - Bruteforce 공격의 자동화되고 반복적인 로그인 시도 자체를 불가능하게 하기위해 로그인에 반복적으로 실패할 경우에는 아래와 같은 자동화 방지 캡차를 사용한다.
@@ -213,6 +213,6 @@ Midium에서 본 것과 같이 지연시간이 2초로 지정되어 있다면 �
 - Bruteforce 공격은 임의의 문자열을 무차별 대입해보는 공격이기 때문에 엄청나게 많은 로그인 실패를 반복하게 된다. 반복적인 로그인 시도를 방지할 수 있도록 로그인 시도 횟수를 제한 할 수 있다.
 
 ### 레퍼런스
-- Bruteforce 공격에 대한 설명 : [URL](https://security.grootboan.com/follow-along/undefined/0-dvwa/reference-writeup#undefined-5)
-- Bruteforce 공격에 대한 설명 : [URL](https://www.kaspersky.com/resource-center/definitions/brute-force-attack)
-- reCaptcha 에 대한 설명 : [URL](https://www.cloudflare.com/ko-kr/learning/bots/how-captchas-work/)
+- Bruteforce 공격에 대한 설명 : [https://security.grootboan.com/follow-along/undefined/0-dvwa/reference-writeup#undefined-5](https://security.grootboan.com/follow-along/undefined/0-dvwa/reference-writeup#undefined-5)
+- Bruteforce 공격에 대한 설명 : [https://www.kaspersky.com/resource-center/definitions/brute-force-attack](https://www.kaspersky.com/resource-center/definitions/brute-force-attack)
+- reCaptcha 에 대한 설명 : [https://www.cloudflare.com/ko-kr/learning/bots/how-captchas-work/](https://www.cloudflare.com/ko-kr/learning/bots/how-captchas-work/)
