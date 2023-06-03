@@ -34,7 +34,7 @@ Bruteforce 공격은 무차별 대입 공격이라고도 하며, 사용자의 �
 
 ![이미지](/assets/3_intruder.png)
 
-먼저 `gedit /usr/share/john/password.lst` 입력하여 칼리리눅스에 있는 딕셔너리를 확인할 수 있었다.
+먼저 `gedit /usr/share/john/password.lst` 입력하여 칼리리눅스에 있는 패스워드 리스트를 확인할 수 있었다.
 
 ![이미지](/assets/5_gedit.png)
 
@@ -94,9 +94,110 @@ if( isset( $_GET[ 'Login' ] ) ) {
 
 #### * Midium Level
 
+![이미지](/assets/2second.png)
+
+위와 같이 취약한 웹 환경에서 bruteforce 공격에 시도했을 때, password가 틀린 경우에는 'Username and/or password incorrect.' 문구를 확인할 수 있었다.
+
+Midium Level 에서는 로그인 시도 시 응답이 조금 느리게 나오는 것을 파악할 수 있었다.
+
+```c
+<?php
+
+if( isset( $_GET[ 'Login' ] ) ) {
+    // Sanitise username input
+    $user = $_GET[ 'username' ];
+    $user = ((isset($GLOBALS["___mysqli_ston"]) && is_object($GLOBALS["___mysqli_ston"])) ? mysqli_real_escape_string($GLOBALS["___mysqli_ston"],  $user ) : ((trigger_error("[MySQLConverterToo] Fix the mysql_escape_string() call! This code does not work.", E_USER_ERROR)) ? "" : ""));
+
+    // Sanitise password input
+    $pass = $_GET[ 'password' ];
+    $pass = ((isset($GLOBALS["___mysqli_ston"]) && is_object($GLOBALS["___mysqli_ston"])) ? mysqli_real_escape_string($GLOBALS["___mysqli_ston"],  $pass ) : ((trigger_error("[MySQLConverterToo] Fix the mysql_escape_string() call! This code does not work.", E_USER_ERROR)) ? "" : ""));
+    $pass = md5( $pass );
+
+    // Check the database
+    $query  = "SELECT * FROM `users` WHERE user = '$user' AND password = '$pass';";
+    $result = mysqli_query($GLOBALS["___mysqli_ston"],  $query ) or die( '<pre>' . ((is_object($GLOBALS["___mysqli_ston"])) ? mysqli_error($GLOBALS["___mysqli_ston"]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false)) . '</pre>' );
+
+    if( $result && mysqli_num_rows( $result ) == 1 ) {
+        // Get users details
+        $row    = mysqli_fetch_assoc( $result );
+        $avatar = $row["avatar"];
+
+        // Login successful
+        echo "<p>Welcome to the password protected area {$user}</p>";
+        echo "<img src=\"{$avatar}\" />";
+    }
+    else {
+        // Login failed
+        sleep( 2 );
+        echo "<pre><br />Username and/or password incorrect.</pre>";
+    }
+
+    ((is_null($___mysqli_res = mysqli_close($GLOBALS["___mysqli_ston"]))) ? false : $___mysqli_res);
+}
+
+?> 
+```
+
+![이미지](/assets/delay.png)
+
+위 소스 코드를 분석한 결과 로그인에 실패했을 경우에는 `sleep(2);` 함수를 통해 2초간 재로그인을 지연시키고 있다. 이 같은 방법으로 bruteforce 공격 진행을 지연시킬 수 있는 시큐어코딩이 되어 있지만, 해당하는 패스워드가 리스트에 상위에 있을 경우에는 여전히 사용자 권한을 빠르게 탈취할 수 있어 안심할 수 없다.
+
 #### * High Level
 
+High Level에서도 로그인을 시도할 경우 몇 초 정도 지연되는 것을 확인할 수 있었다.
+
+```c
+<?php
+
+if( isset( $_GET[ 'Login' ] ) ) {
+    // Check Anti-CSRF token
+    checkToken( $_REQUEST[ 'user_token' ], $_SESSION[ 'session_token' ], 'index.php' );
+
+    // Sanitise username input
+    $user = $_GET[ 'username' ];
+    $user = stripslashes( $user );
+    $user = ((isset($GLOBALS["___mysqli_ston"]) && is_object($GLOBALS["___mysqli_ston"])) ? mysqli_real_escape_string($GLOBALS["___mysqli_ston"],  $user ) : ((trigger_error("[MySQLConverterToo] Fix the mysql_escape_string() call! This code does not work.", E_USER_ERROR)) ? "" : ""));
+
+    // Sanitise password input
+    $pass = $_GET[ 'password' ];
+    $pass = stripslashes( $pass );
+    $pass = ((isset($GLOBALS["___mysqli_ston"]) && is_object($GLOBALS["___mysqli_ston"])) ? mysqli_real_escape_string($GLOBALS["___mysqli_ston"],  $pass ) : ((trigger_error("[MySQLConverterToo] Fix the mysql_escape_string() call! This code does not work.", E_USER_ERROR)) ? "" : ""));
+    $pass = md5( $pass );
+
+    // Check database
+    $query  = "SELECT * FROM `users` WHERE user = '$user' AND password = '$pass';";
+    $result = mysqli_query($GLOBALS["___mysqli_ston"],  $query ) or die( '<pre>' . ((is_object($GLOBALS["___mysqli_ston"])) ? mysqli_error($GLOBALS["___mysqli_ston"]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false)) . '</pre>' );
+
+    if( $result && mysqli_num_rows( $result ) == 1 ) {
+        // Get users details
+        $row    = mysqli_fetch_assoc( $result );
+        $avatar = $row["avatar"];
+
+        // Login successful
+        echo "<p>Welcome to the password protected area {$user}</p>";
+        echo "<img src=\"{$avatar}\" />";
+    }
+    else {
+        // Login failed
+        sleep( rand( 0, 3 ) );
+        echo "<pre><br />Username and/or password incorrect.</pre>";
+    }
+
+    ((is_null($___mysqli_res = mysqli_close($GLOBALS["___mysqli_ston"]))) ? false : $___mysqli_res);
+}
+
+// Generate Anti-CSRF token
+generateSessionToken();
+
+?> 
+```
+
+소스코드 분석 결과 이번에도 `sleep( rand( 0, 3 ) );` 함수를 사용하여 로그인을 지연시키고 있지만 2초가 아니라 0~3초까지 랜덤하게 지연시키고 있는 것을 확인하였다. 
+
+Midium에서 본 것과 같이 지연시간이 2초로 지정되어 있다면 공격자가 2초동안 응답이 없을 경우 틀린 패스워드라는 것을 간주하여 바로 다음 요청을 진행할 수 있다는 취약점을 확인할 수 있다. 따라서 시간을 랜덤하게 설정하여 서로 다른 시간으로 응답값을 받을 수 있도록 한 것을 확인할 수 있다.
+
 ### 취약점 원인
+
 
 ###### BruteForce 공격에 취약한 함수
 
@@ -110,7 +211,11 @@ if( isset( $_GET[ 'Login' ] ) ) {
 
 4. 비밀번호 인증에 속도 제한을 적용한다.
 
-5. 캡차(captcah)를 활성화한다.
+5. 캡차(captcha)를 활성화한다.
+
+6. 로그인 시도 제한을 설정한다.
+- 로그인 실패 시 로그인 재시도 할 수 있는 횟수를 5회로 지정하여 5번 틀릴 경우에는 사용자 계정이 잠금 설정 되도록 지정하면 bruteforce 공격을 방지할 수 있다.
+
 
 ### 레퍼런스
 - Bruteforce 공격에 대한 설명 : https://security.grootboan.com/follow-along/undefined/0-dvwa/reference-writeup#undefined-5
