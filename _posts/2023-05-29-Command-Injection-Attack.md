@@ -118,12 +118,13 @@ Midium Level에서는 동일하게 ';cat /etc/passwd' 명령을 실행해보았�
 
 어플리케이션 별로 Command Injection 공격에 취약한 함수는 아래와 같다.
 
-언어
-Java - Ststen.*, System.runtime, Runtime.exec()
-C/C++ - system(). exec(), ShellExecute()
-python - exec(), eval(), os.system(), os.popen(), subprocess.popen(), subprocess.call()
-Perl - open(). sysopen(), system(), glob()
-php - exec(), system(), passthru(), popen(), rquire(), include(), eval(), preg_replace(), shell_exec(), proc_open(), eval()
+|언어||설명|
+|--------||--------------------------------------------------------------------------------------------------------|
+|Java||Ststem.*, System.runtime, Runtime.exec()|
+|C/C++||system(). exec(), ShellExecute()|
+|python||exec(), eval(), os.system(), os.popen(), subprocess.popen(), subprocess.call()|
+|Perl||open(). sysopen(), system(), glob()|
+|php||exec(), system(), passthru(), popen(), rquire(), include(), eval(), preg_replace(), shell_exec(), proc_open(), eval()|
 
 
 ### 대응 방안
