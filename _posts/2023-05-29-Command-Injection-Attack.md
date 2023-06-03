@@ -1,8 +1,3 @@
----
-layout: post
-title: ""
-subtitle: ""
----
 ## Command Injection 공격 (명령어 주입 공격)
 
 ### 개요
