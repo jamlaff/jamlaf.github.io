@@ -176,7 +176,7 @@ if( isset( $_GET[ 'Login' ] ) ) {
     }
     else {
         // Login failed
-        sleep( rand( 0, 3 ) );
+        <span style='background-color: #ffdce0'>sleep( rand( 0, 3 ) );</span>
         echo "<pre><br />Username and/or password incorrect.</pre>";
     }
 
@@ -213,6 +213,6 @@ Midium에서 본 것과 같이 지연시간이 2초로 지정되어 있다면 �
 - Bruteforce 공격은 임의의 문자열을 무차별 대입해보는 공격이기 때문에 엄청나게 많은 로그인 실패를 반복하게 된다. 반복적인 로그인 시도를 방지할 수 있도록 로그인 시도 횟수를 제한 할 수 있다.
 
 ### 레퍼런스
-- Bruteforce 공격에 대한 설명 : https://security.grootboan.com/follow-along/undefined/0-dvwa/reference-writeup#undefined-5
-- Bruteforce 공격에 대한 설명 : https://www.kaspersky.com/resource-center/definitions/brute-force-attack
-- reCaptcha 에 대한 설명 : https://www.cloudflare.com/ko-kr/learning/bots/how-captchas-work/
+- Bruteforce 공격에 대한 설명 : [URL](https://security.grootboan.com/follow-along/undefined/0-dvwa/reference-writeup#undefined-5)
+- Bruteforce 공격에 대한 설명 : [URL](https://www.kaspersky.com/resource-center/definitions/brute-force-attack)
+- reCaptcha 에 대한 설명 : [URL](https://www.cloudflare.com/ko-kr/learning/bots/how-captchas-work/)
