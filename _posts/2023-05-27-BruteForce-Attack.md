@@ -203,19 +203,19 @@ Midium에서 본 것과 같이 지연시간이 2초로 지정되어 있다면 �
 
 ### 대응 방안
 
-1. 길고 복잡하며 암호화된 비밀번호를 사용한다(256비트 암호화가 이상적)
+1. 패스워드 복잡성과 여러 계정에서의 비밀번호 재사용에 관한 정책을 설정한다.
+- 패스워드를 길고 복잡하게 만들도록 규칙을 강제하여 공격자가 패스워드를 알아낼 수 없도록 해야한다.
+* 패스워드 복잡성: 사용자 패스워드 설정 시 영문(대문자, 소문자) 숫자, 특수문자가 혼합된 패스워드로 설정하는 방법
 
-2. 비밀번호 해시에 솔트(salt)를 넣는다.
+4. 자동화방지(re-Captcha)를 활성화한다.
+- Bruteforce 공격의 자동화되고 반복적인 로그인 시도 자체를 불가능하게 하기위해 로그인에 반복적으로 실패할 경우에는 아래와 같은 자동화 방지 캡차를 사용한다.
 
-3. 비밀번호 복잡성과 여러 계정에서의 비밀번호 재사용에 관한 정책을 설정한다.
+![이미지](/assets/captcha.png)
 
-4. 비밀번호 인증에 속도 제한을 적용한다.
-
-5. 캡차(captcha)를 활성화한다.
-
-6. 로그인 시도 제한을 설정한다.
-- 로그인 실패 시 로그인 재시도 할 수 있는 횟수를 5회로 지정하여 5번 틀릴 경우에는 사용자 계정이 잠금 설정 되도록 지정하면 bruteforce 공격을 방지할 수 있다.
-
+5. 잘못된 로그인 시도가 지속될 경우 제한(시간, 잠금 등)을 설정한다.
+- Bruteforce 공격은 임의의 문자열을 무차별 대입해보는 공격이기 때문에 엄청나게 많은 로그인 실패를 반복하게 된다. 반복적인 로그인 시도를 방지할 수 있도록 로그인 시도 횟수를 제한 할 수 있다.
 
 ### 레퍼런스
 - Bruteforce 공격에 대한 설명 : https://security.grootboan.com/follow-along/undefined/0-dvwa/reference-writeup#undefined-5
+- Bruteforce 공격에 대한 설명 : https://www.kaspersky.com/resource-center/definitions/brute-force-attack
+- reCaptcha 에 대한 설명 : https://www.cloudflare.com/ko-kr/learning/bots/how-captchas-work/
