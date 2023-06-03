@@ -234,5 +234,5 @@ if( isset( $_POST[ 'Submit' ]  ) ) {
 
 
 ### 레퍼런스
-- OWASP Top 10 에 대한 설명 : https://www.edudwar.com/owasp-top-10-vulnerabilities/
-- Command Injection 공격에 대한 설명 및 대응방안 : https://vmilsh.tistory.com/287
+- OWASP Top 10 에 대한 설명 : [https://www.edudwar.com/owasp-top-10-vulnerabilities/](https://www.edudwar.com/owasp-top-10-vulnerabilities/)
+- Command Injection 공격에 대한 설명 및 대응방안 : [https://vmilsh.tistory.com/287](https://vmilsh.tistory.com/287)
