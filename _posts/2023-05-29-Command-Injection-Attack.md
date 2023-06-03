@@ -62,8 +62,6 @@ IP를 생략하고 ';' 뒤에 'cat /etc/passwd' 명령을 통해 원격 호스�
 
 사용자가 입력하는 인자값을 조작하여 OS 명령을 실행함으로써, 공격자가 원하는 정보를 획득할 수 있는 것을 확인하였다. Command Injection 취약점에 노출된 웹 환경의 소스코드를 확인해보았다.
 
-![이미지](/assets/low_sourcecode.png)
-
 ```c
 <?php
 
@@ -101,7 +99,39 @@ Midium Level에서는 동일하게 ';cat /etc/passwd' 명령을 실행해보았�
 
 * 소스코드 확인(Midium)
 
-![이미지](/assets/midium_source.png)
+<!--midium level의 소스코드-->
+```c
+<?php
+
+if( isset( $_POST[ 'Submit' ]  ) ) {
+    // Get input
+    $target = $_REQUEST[ 'ip' ];
+
+    // Set blacklist
+    $substitutions = array(
+        '&&' => '',
+        ';'  => '',
+    );
+
+    // Remove any of the charactars in the array (blacklist).
+    $target = str_replace( array_keys( $substitutions ), $substitutions, $target );
+
+    // Determine OS and execute the ping command.
+    if( stristr( php_uname( 's' ), 'Windows NT' ) ) {
+        // Windows
+        $cmd = shell_exec( 'ping  ' . $target );
+    }
+    else {
+        // *nix
+        $cmd = shell_exec( 'ping  -c 4 ' . $target );
+    }
+
+    // Feedback for the end user
+    echo "<pre>{$cmd}</pre>";
+}
+
+?> 
+```
 
 소스코드를 보니 ';', '&&' 메타문자를 사용할 경우 Command Injection이 실행되지 않도록 해당 문자가 지워지도록 시큐어 코딩이 되어있었다. 
 
@@ -121,7 +151,46 @@ Midium Level에서는 동일하게 ';cat /etc/passwd' 명령을 실행해보았�
 
 * 소스코드 확인(High)
 
-![이미지](/assets/high_1.png)
+<!--high level의 소스코드-->
+```c
+<?php
+
+if( isset( $_POST[ 'Submit' ]  ) ) {
+    // Get input
+    $target = trim($_REQUEST[ 'ip' ]);
+
+    // Set blacklist
+    $substitutions = array(
+        '&'  => '',
+        ';'  => '',
+        '| ' => '',
+        '-'  => '',
+        '$'  => '',
+        '('  => '',
+        ')'  => '',
+        '`'  => '',
+        '||' => '',
+    );
+
+    // Remove any of the charactars in the array (blacklist).
+    $target = str_replace( array_keys( $substitutions ), $substitutions, $target );
+
+    // Determine OS and execute the ping command.
+    if( stristr( php_uname( 's' ), 'Windows NT' ) ) {
+        // Windows
+        $cmd = shell_exec( 'ping  ' . $target );
+    }
+    else {
+        // *nix
+        $cmd = shell_exec( 'ping  -c 4 ' . $target );
+    }
+
+    // Feedback for the end user
+    echo "<pre>{$cmd}</pre>";
+}
+
+?> 
+```
 
 이 전과 비교하여 많은 문자를 제한하는 시큐어 코딩으로 '&', ';', '|', '-' 등 9개의 문자를 사용하는 경우 해당 문자를 공백으로 치환하여 대응을 하고있는 것을 볼 수 있다.
 
