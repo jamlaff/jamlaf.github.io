@@ -8,7 +8,7 @@
 
 이번 Writeup 에서 진행하는Bruteforce 공격과 관련된 공부는 다음과 같다.
 1. 취약점 설명 - Bruteforce 공격에 대한 연구
-2. 개념 증명 실습 - Burpsuite Intruder 툴을 활용하여 DVWA Security Level(Low, Midium, High)로 구성된 실습 진행
+2. 개념 증명 실습 - Burpsuite Intruder, Hydra 툴을 활용한 DVWA Security Level(Low, Midium, High)로 구성된 실습 진행
 3. 대응방안 - Bruteforce 공격에 대한 대응 방안
 4. 레퍼런스
 
@@ -89,6 +89,23 @@ if( isset( $_GET[ 'Login' ] ) ) {
 
 위 소스코드에서 Bruteforce 공격을 감지하거나 대응할 수 있는 코드가 확인 되지 않았다. Bruteforce 공격에 대응할 시큐어코딩이 필요해 보인다. 
 
+##### Hydra
+
+이번에는 Hydra 툴을 사용하여 Bruteforce 공격을 시도해보았다. Hydra는 Dictionary 공격이나 Bruteforce와 같은 공격을 수행할 때 사용하는 툴로 여러 개의 프로토콜들을 지원한다. 
+
+먼저 위 처럼 공격자가 사용자 권한을 획득하고 서비스를 활용 할 수 있도록 쿠키값을 탈취하였다. 
+
+![이미지](/assets/hydra_intercept.png)
+
+탈취한 쿠키값으로 검증을 거치지 않고 사용자로 위장하여 admin 계정의 패스워드가 나올 때 까지 하나씩 대입하여 공격을 시도해보았다.
+
+`hydra -l admin -P 10kpassword.txt 127.0.0.1 http-get-form '/vulnerabilities/brute/:username=^USER^&password=^PASS^&Login=Login:H=Cookie:PHPSESSID=1kjidhie03fm37j915g8le23m5; security=low:F=Username and/or password incorrect'`
+
+![이미지](/assets/hydra3.png)
+
+공격 결과 admin 계정의 패스워드를 탈취할 수 있었다.
+
+
 #### * Midium Level
 
 ![이미지](/assets/2second.png)
@@ -138,6 +155,7 @@ if( isset( $_GET[ 'Login' ] ) ) {
 ```
 
 위 소스 코드를 분석한 결과 로그인에 실패했을 경우에는 `sleep(2);` 함수를 통해 2초간 재로그인을 지연시키고 있다. 이 같은 방법으로 bruteforce 공격 진행을 지연시킬 수 있는 시큐어코딩이 되어 있지만, 해당하는 패스워드가 리스트에 상위에 있을 경우에는 여전히 사용자 권한을 빠르게 탈취할 수 있어 안심할 수 없다.
+
 
 #### * High Level
 
