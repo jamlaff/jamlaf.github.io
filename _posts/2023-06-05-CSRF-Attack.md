@@ -78,7 +78,7 @@ CSRF 공격을 수행하기 위해 공격자가 피싱사이트에 업로드 할
 </html>
 ```
 
-사용자가 해당 웹 서버에 인증을하였고 브라우저에 서버에서 전달받은 쿠키 값을 저장한 상태라고 가정하였다. 이후 사용자가 다른 웹 사이트에서 악의적인 스크립트로 인해 `http://localhost/vulnerabilities/csrf/?password_new=hacked&password_conf=hacked&Change=Change` 이와 같은 요청이 전달된다면 서버를 속이고 공격자는 패스워드를 변경할 수 있을 것이다.
+사용자가 해당 웹 서버에 인증을하였고 브라우저에 서버에서 전달받은 세션ID값을 저장한 상태라고 가정하였다. 이후 사용자가 다른 웹 사이트에서 악의적인 스크립트로 인해 `http://localhost/vulnerabilities/csrf/?password_new=hacked&password_conf=hacked&Change=Change` 이와 같은 요청이 전달된다면 서버를 속이고 공격자는 패스워드를 변경할 수 있을 것이다.
 
 공격자는 피싱사이트를 제작하여 사용자에게 메일로 전송하고, 피싱사이트 안에 포함된 링크를 직접 클릭 할 수 있도록 유도하는 공격을 수행해 보았다.
 
