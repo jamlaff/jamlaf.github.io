@@ -35,7 +35,7 @@ CSRF 공격(사이트간 요청 위조)은 웹 어플리케이션의 취약점 �
 
 #### * Low Level
 
-취약한 DVWA 웹 서버를 활용하여 CSRF 사용자 패스워드 변경 페이지에서 실습을 진행해보았다. 먼저 사용자가 웹 서버에 패스워드 변경을 GET Method를 통해 요청할 때 HTTP 요청을 Burpsuite을 통해 가로채어 확인해보았다.
+취약한 DVWA 웹 환경(Low Level)에서 CSRF 공격 실습을 진행해보았다. 먼저 사용자가 웹 서버에 패스워드 변경을 GET Method를 통해 요청할 때 HTTP 요청을 Burpsuite을 통해 가로채어 확인해보았다.
 
 ![이미지](/assets/intercept.png)
 
